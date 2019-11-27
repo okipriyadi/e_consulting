@@ -50,7 +50,7 @@ class Login extends CI_Controller {
 			///print_r($newdata);
 			redirect('index.php/chat', 'refresh');
 		}
-		//redirect(base_url());
+		redirect(base_url());
 	}
 
 	public function logout()

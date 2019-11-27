@@ -10,9 +10,17 @@ class Chat_model extends CI_Model{
       return $insert_id;
     }
 
+    public function getAllJudulChatByIdSender($idSender){
+      $this->db->select('*');
+      $query = $this->db->get_where('judul_chat',array('send_by'=>$idSender));
+      return $query->result_array();
+    }
 
-
-
+    public function getChatByIdJudul($idJudul){
+      $this->db->select('*');
+      $query = $this->db->get_where('chat',array('judul_chat_id'=>$idJudul));
+      return $query->result_array();
+    }
 
     public function getAllStatus(){
         $this->db->select('*');

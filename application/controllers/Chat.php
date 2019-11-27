@@ -19,7 +19,24 @@ class Chat extends CI_Controller
 
     public function index()
     {
-				$data = array('content' => 'chat/chat_dashboard.php' );
+        $idSender = $this->session->userdata('user_id_econsulting');
+        $judul_chats = $this->chat_model->getAllJudulChatByIdSender($idSender);
+        if($judul_chats){
+          $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
+          $judul = $judul_chats[0]["judul_chat"];
+        }else{
+          $chats = array();
+          $judul = "";
+        }
+
+
+
+				$data = array(
+                      'judul' => $judul,
+                      'chats' => $chats,
+                      'content' => 'chat/chat_dashboard.php',
+                      'judul_chats' => $judul_chats
+                    );
 				$this->load->view('index', $data);
     }
 

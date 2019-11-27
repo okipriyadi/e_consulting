@@ -32,11 +32,11 @@
           <div class="row login-box" >
                 <form class="login100-form validate-form" action="<?= base_url()?>index.php/login" method="post" >
                   <h4 class="login100-form-title" style="text-shadow: 0 0 0 14px #f7f5ec;"><b><u>LOGIN PEGAWAI KEMENPAN</u></b></h4>
-                    <small>DI LINGKUNGAN KEMENPANRB</small>
+                    <small>Masuk dengan menggunakan akun smart.menpan.go.id</small>
                   </span>
                   <br>
                     <input class="input100" type="text" name="username" placeholder="Email">
-                  <div class="wrap-input100 validate-input" data-validate="Password is required">
+                  <div class="wrap-input100 validate-input" data-validate="Password is required" >
                     <input class="input100" type="password" name="password" placeholder="Password">
                   </div>
 
