@@ -12,17 +12,14 @@ class Chat extends CI_Controller
         $this->load->helper(array('url', 'form'));
         $this->load->library('user_agent');
 
-        if (!isset($this->session->userdata['logged_in']) || $this->session->userdata['logged_in'] === false) {
+        if (!isset($this->session->userdata['logged_in_econsulting']) || $this->session->userdata['logged_in_econsulting'] === false) {
             redirect(base_url());
         }
-
-        $this->user = $this->db->get_where('users', array('id' => $this->session->userdata['user_id']), 1)->row();
     }
 
     public function index()
     {
-        $teman = $this->db->where('id !=', $this->user->id)->get('users');
-				$data = array('content' => 'chat/chat_dashboard.php','teman'=> $teman );
+				$data = array('content' => 'chat/chat_dashboard.php' );
 				$this->load->view('index', $data);
     }
 

@@ -38,7 +38,7 @@
   <?php if(function_exists("custom_footer")){
     custom_footer();
   }
-  ?>  
+  ?>
 
   </body>
 </html>

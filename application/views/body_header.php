@@ -35,9 +35,9 @@
         <li class="nav-item active"><a href="<?= base_url() ?>" class="nav-link pl-0">Home</a></li>
         <!--<li class="nav-item"><a href="#tutorial" class="nav-link">Tutorial</a></li> -->
         <?php
-            if (isset($this->session->userdata['logged_in']))  {
+            if (isset($this->session->userdata['logged_in_econsulting']))  {
         ?>
-              <li class="nav-item"><a href="<?= base_url() ?>index.php/chat" class="nav-link">Chat</a></li>
+              <li class="nav-item"><a href="<?= base_url() ?>index.php/chat" class="nav-link pl-0">Chat</a></li>
         <?php
             }
          ?>
@@ -47,7 +47,7 @@
         <li class="nav-item"><a href="<?= base_url() ?>index.php/Download" class="nav-link">download</a></li>
         <li class="nav-item"><a href="<?= base_url() ?>index.php/faq" class="nav-link">FAQ</a></li>
         <?php
-            if (isset($this->session->userdata['logged_in']))  {
+            if (isset($this->session->userdata['logged_in_econsulting']))  {
         ?>
               <li class="nav-item"><a href="<?= base_url() ?>index.php/login/logout" class="nav-link">Logout</a></li>
         <?php

@@ -28,12 +28,13 @@
   </div>
   <div class="col-md-4">
     <div class="row" >
-      <div class="col-md-12" style="background: url(<?= base_url()?>assets/template/images/menpan3.jpg); height: 600px; ">
+      <div class="col-md-12" style="background: url(<?= base_url()?>assets/template/images/menpan3v.jpg); height: 600px; ">
           <div class="row login-box" >
                 <form class="login100-form validate-form" action="<?= base_url()?>index.php/login" method="post" >
                   <h4 class="login100-form-title" style="text-shadow: 0 0 0 14px #f7f5ec;"><b><u>LOGIN PEGAWAI KEMENPAN</u></b></h4>
                     <small>DI LINGKUNGAN KEMENPANRB</small>
                   </span>
+                  <br>
                     <input class="input100" type="text" name="username" placeholder="Email">
                   <div class="wrap-input100 validate-input" data-validate="Password is required">
                     <input class="input100" type="password" name="password" placeholder="Password">
@@ -443,7 +444,7 @@
               </div>
             </div>
           </div>
-         
+
               </div>
             </div>
           </div>
@@ -504,7 +505,7 @@ function custom_footer(){
           data :{"email":$('#emailtamuawal').val()},
           success: function(response){
             if(response == 1){
-              window.location.replace("<?= base_url('index.php/chat/');?>");
+              //window.location.replace("<?= base_url('index.php/chat/');?>");
             }
           }
       });
