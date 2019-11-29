@@ -10,16 +10,43 @@ class Chat_model extends CI_Model{
       return $insert_id;
     }
 
+    public function tambahChat($data){
+      $this->db->insert("chat",$data);
+      $insert_id = $this->db->insert_id();
+      return $insert_id;
+    }
+
     public function getAllJudulChatByIdSender($idSender){
       $this->db->select('*');
       $query = $this->db->get_where('judul_chat',array('send_by'=>$idSender));
       return $query->result_array();
     }
 
+    public function getAllJudulChatByIdReceiver($idReceiver){
+      $this->db->select('*');
+      $query = $this->db->get_where('judul_chat',array('send_to'=>$idReceiver));
+      return $query->result_array();
+    }
+
+    public function getJudulChatByIdJudul($idJudul){
+      $this->db->select('*');
+      $query = $this->db->get_where('judul_chat',array('id_judul_chat'=>$idJudul));
+      return $query->row_array();
+    }
+
     public function getChatByIdJudul($idJudul){
       $this->db->select('*');
       $query = $this->db->get_where('chat',array('judul_chat_id'=>$idJudul));
       return $query->result_array();
+    }
+
+    public function getNewMessage($idJudul, $sendTo){
+      $this->db->select('*');
+      $this->db->from('chat');
+      $this->db->where('judul_chat_id',$idJudul);
+      $this->db->where('send_to', $sendTo);
+      $this->db->where('status',0);
+      return $this->db->get()->result_array();
     }
 
     public function getAllStatus(){
@@ -95,6 +122,16 @@ class Chat_model extends CI_Model{
 
     public function updateTaskStatus($id_detail, $id_status){
       $this->db->update("task_detail",array("id_status"=>$id_status), array("id_detail" =>$id_detail));
+      return 1;
+    }
+
+    public function updateChatStatusByIdJudul($idJudulChat){
+      $this->db->update("chat",array("status"=>1), array("judul_chat_id" =>$idJudulChat));
+      return 1;
+    }
+
+    public function updateChatStatusForNewMessage($idJudulChat, $sendTo){
+      $this->db->update("chat",array("status"=>1), array("judul_chat_id" =>$idJudulChat, "send_to" =>$sendTo));
       return 1;
     }
 

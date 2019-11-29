@@ -587,7 +587,7 @@
 </style>
 
   <div class="container app" >
-    <div class="row app-one" >
+    <div class="row app-one" style="min-height:400px">
       <div class="col-sm-4 side">
         <div class="side-one">
           <div class="row heading">
@@ -596,19 +596,11 @@
                 <img src="https://bootdey.com/img/Content/avatar/avatar1.png" >
               </div>
             </div>
-            <div class="col-sm-10 col-xs-10" style="margin:0px;padding:0px; top:5px; font-weight:500">
+            <div class="col-sm-10 col-xs-10" style="margin:0px;padding:0px; top:5px; font-weight:500" id="kotak">
               <a class="heading-name-meta" style="color:white"><?php echo $this->session->userdata('nama_econsulting') ?></a>
             </div>
           </div>
 
-          <div class="row searchBox">
-            <div class="col-sm-12 searchBox-inner">
-              <div class="form-group has-feedback">
-                <input id="searchText" type="text" class="form-control" name="searchText" placeholder="Search">
-                <span class="glyphicon glyphicon-search form-control-feedback"></span>
-              </div>
-            </div>
-          </div>
 
           <div class="row sideBar">
 
@@ -692,17 +684,17 @@
 
           <?php
             foreach ($chats as $key => $chat) {
-              if(chat["send_by"] ==  $this->session->userdata('user_id_econsulting')){
+              if($chat["send_by"] ==  $this->session->userdata('user_id_econsulting')){
           ?>
 
                 <div class="row message-body" style="width:100%">
                   <div class="col-sm-12 message-main-sender">
                     <div class="sender">
                       <div class="message-text">
-                        I am doing nothing man!
+                        <?= $chat["message"]; ?>
                       </div>
                       <span class="message-time pull-right">
-                        Sun
+                        <?= $chat["time"] ?>
                       </span>
                     </div>
                   </div>
@@ -714,101 +706,25 @@
                     <div class="col-sm-12 message-main-receiver">
                       <div class="receiver">
                         <div class="message-text">
-                         alsdj lkajsdlkadjaksj dlkasj dka sdlak dlka
+                         <?= $chat["message"]; ?>
                         </div>
                         <span class="message-time pull-right">
-                          Sun
+                            <?= $chat["time"] ?>
                         </span>
                       </div>
                     </div>
                   </div>
         <?php
+            }
           }
         ?>
-
-
-        <div class="row message-previous">
-          <div class="col-sm-12 message-main-receiver">
-            <div class="receiver">
-              <div class="message-text">
-               alsdj lkajsdlkadjaksj dlkasj dka sdlak dlka
-              </div>
-              <span class="message-time pull-right">
-                Sun
-              </span>
-            </div>
-          </div>
         </div>
 
-        <div class="row message-body" style="width:100%">
-        <div class="col-sm-12 message-main-sender">
-          <div class="sender">
-            <div class="message-text">
-              I am doing nothing man!
-            </div>
-            <span class="message-time pull-right">
-              Sun
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row message-previous">
-        <div class="col-sm-12 message-main-receiver">
-          <div class="receiver">
-            <div class="message-text">
-             alsdj lkajsdlkadjaksj dlkasj dka sdlak dlka
-            </div>
-            <span class="message-time pull-right">
-              Sun
-            </span>
-          </div>
-        </div>
-      </div>
-
-      <div class="row message-body" style="width:100%">
-      <div class="col-sm-12 message-main-sender">
-        <div class="sender">
-          <div class="message-text">
-            I am doing nothing man! sdbajsdashd akhsd kjahdkja dkjash djakshd akjs hdkjashjsdhjka sdj ajsdh ajkdkajd jakdjashdja hdkjah sdjkasjkdhajksdh kjashd kjas hdkjash djkahskdj hakjsdh kajshdkajh
-          </div>
-          <span class="message-time pull-right">
-            Sun
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row message-previous">
-      <div class="col-sm-12 message-main-receiver">
-        <div class="receiver">
-          <div class="message-text">
-           alsdj lkajsdlkadjaksj dlkasj dka sdlak dlka
-          </div>
-          <span class="message-time pull-right">
-            Sun
-          </span>
-        </div>
-      </div>
-    </div>
-    <div class="row message-previous">
-      <div class="col-sm-12 message-main-receiver">
-        <div class="receiver">
-          <div class="message-text">
-           alsdj lkajsdlkadjaksj dlkasj dka sdlak dlka
-          </div>
-          <span class="message-time pull-right">
-            Sun
-          </span>
-        </div>
-      </div>
-    </div>
-
-        </div>
       </div>
 
 
 
-        <div class="row reply" style="position: fixed; bottom: 0; background:red">
+        <div class="row reply" style="position: fixed; bottom: 0; background:red; ">
           <div class="col-sm-1 col-xs-1 reply-emojis">
             <i class="fa fa-smile-o fa-2x"></i>
           </div>
@@ -816,7 +732,7 @@
             <textarea class="form-control" rows="1" id="comment" placeholder="Tulis Disini"></textarea>
           </div>
           <div class="col-sm-1 col-xs-1 reply-recording">
-            <i class="fas fa-paper-plane fa-2x " style="color:white"></i>
+            <i class="fas fa-paper-plane fa-2x " style="color:white" id="sendButton"></i>
           </div>
           <div class="col-sm-1 col-xs-1 reply-send">
             <i class="fa fa-send fa-2x" aria-hidden="true"></i>
@@ -825,9 +741,13 @@
       </div>
     </div>
   </div>
+</div>
+<input type="text" id="hereToFocus" style="color:white; border:0px">
 
-
-
+<?php
+function custom_footer(){
+  global $id_judul_chat;
+ ?>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript">
   	$(function(){
@@ -842,6 +762,90 @@
           "left": "-100%"
         });
       });
-  })
+  });
+
+  $(document).ready(function(){
+    $('#comment').focus();
+    $("#sendButton").click(function(){
+          var dt = new Date();
+          var time = dt.getHours() + ":" + dt.getMinutes()
+          var comment = $('#comment').val();
+          sendMessage(comment,<?= $id_judul_chat ?>);
+          $('#conversation').append(`
+                  <div class="row message-body" style="width:100%" id="a`+ time +`">
+                    <div class="col-sm-12 message-main-sender">
+                      <div class="sender">
+                        <div class="message-text">
+                          `+ comment +`
+                        </div>
+                        <span class="message-time pull-right">
+                          `+time+`
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+         `);
+         $('#comment').val('');
+         $('#hereToFocus').focus();
+         $('#comment').focus();
+     });
+
+
+    function sendMessage(message, id_judul_chat){
+      $.ajax({
+                url: "<?php echo base_url(); ?>chat/sendMessage",
+                type: "post",
+                datatype: 'json',
+                data: {"message":message, "id_judul_chat":id_judul_chat},
+                success: function(data){
+
+                  },
+                error: function(xhr, statusTeks, kesalahan){
+                      console.log("Kesalahan : " + kesalahan);
+                }
+          })
+    };
+
+    function checkNewMessage(){
+      $.ajax({
+                url: "<?php echo base_url(); ?>chat/getNewMessage",
+                type: "post",
+                datatype: 'json',
+                data: {"id_judul_chat":<?= $id_judul_chat ?>},
+                success: function(data){
+                      var dt = new Date();
+                      var time = dt.getHours() + ":" + dt.getMinutes();
+                      var obj = jQuery.parseJSON(data);
+                      if(obj.length != 0){
+                          $.each(obj, function( index, value ) {
+                                $('#conversation').append(`
+                                        <div class="row message-body" style="width:100%" id="a`+ time +`">
+                                          <div class="col-sm-12 message-main-receiver">
+                                            <div class="receiver">
+                                              <div class="message-text">
+                                                `+ value["message"] +`
+                                              </div>
+                                              <span class="message-time pull-right">
+                                                `+time+`
+                                              </span>
+                                            </div>
+                                          </div>
+                                        </div>
+                               `);
+                               $('#comment').val('');
+                               $('#hereToFocus').focus();
+                               $('#comment').focus();
+                            });
+                     }
+                },
+                error: function(xhr, statusTeks, kesalahan){
+                      console.log("Kesalahan : " + kesalahan);
+                }
+          })
+      }
+      interval = setInterval(checkNewMessage, 1000);
+  });
   </script>
-</div>
+<?php
+}
+?>

@@ -19,18 +19,23 @@ class Chat extends CI_Controller
 
     public function index()
     {
-        $idSender = $this->session->userdata('user_id_econsulting');
-        $judul_chats = $this->chat_model->getAllJudulChatByIdSender($idSender);
+        $id_user = $this->session->userdata('user_id_econsulting');
+        if($this->session->userdata('role_econsulting') == 'penanya'){
+          $judul_chats = $this->chat_model->getAllJudulChatByIdSender($id_user);
+        }else{
+          $judul_chats = $this->chat_model->getAllJudulChatByIdReceiver($id_user);
+        }
+
         if($judul_chats){
           $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
+          $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
           $judul = $judul_chats[0]["judul_chat"];
+          $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
         }else{
           $chats = array();
           $judul = "";
+          $GLOBALS['id_judul_chat']  = "";
         }
-
-
-
 				$data = array(
                       'judul' => $judul,
                       'chats' => $chats,
@@ -71,10 +76,30 @@ class Chat extends CI_Controller
 
     public function sendMessage()
     {
-        $this->db->insert('chat', array(
-            'message' => htmlentities($this->input->post('message', true)),
-            'send_to' => $this->input->post('chatWith'),
-            'send_by' => $this->user->id
-        ));
+      $id_judul_chat = htmlentities($this->input->post('id_judul_chat', true));
+      $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul_chat);
+      if($this->session->userdata('role_econsulting') == 'penanya'){
+        $sendTo = (int)$judul_chat['send_to'];
+        $sendBy = (int)$judul_chat['send_by'];
+      }else{
+        $sendTo = (int)$judul_chat['send_by'];
+        $sendBy = (int)$judul_chat['send_to'];
+      }
+      $data = array(
+        'message' => htmlentities($this->input->post('message', true)),
+        'send_to' => $sendTo,
+        'send_by' => $sendBy ,
+        'judul_chat_id' => (int)$id_judul_chat
+      );
+      $this->chat_model->tambahChat($data);
     }
+
+    public function getNewMessage()
+  	{
+      $id_judul_chat = htmlentities($this->input->post('id_judul_chat', true));
+      $newMessage = $this->chat_model->getNewMessage($id_judul_chat, $this->session->userdata["user_id_econsulting"]);
+      $this->chat_model->updateChatStatusForNewMessage($id_judul_chat, $this->session->userdata["user_id_econsulting"]);
+  		$data = json_encode($newMessage);
+  		echo ($data);
+  	}
 }
