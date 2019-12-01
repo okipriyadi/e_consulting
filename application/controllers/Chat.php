@@ -30,13 +30,16 @@ class Chat extends CI_Controller
           $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
           $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
           $judul = $judul_chats[0]["judul_chat"];
+          $send_by = $judul_chats[0]["nama"];
           $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
         }else{
           $chats = array();
           $judul = "";
           $GLOBALS['id_judul_chat']  = "";
+          $send_by = "";
         }
 				$data = array(
+                      'send_by' => $send_by,
                       'judul' => $judul,
                       'chats' => $chats,
                       'content' => 'chat/chat_dashboard.php',
@@ -93,6 +96,24 @@ class Chat extends CI_Controller
       );
       $this->chat_model->tambahChat($data);
     }
+
+    public function newKonsultasi()
+    {
+      $judul_chat = htmlentities($this->input->post('judul'));
+      $jenis_konsultasi = htmlentities($this->input->post('select_konsultasi'));
+      $id_user = $this->session->userdata["user_id_econsulting"];
+      $id_judul_chat = $this->chat_model->createNewKonsultasi($judul_chat, $jenis_konsultasi, $id_user);
+      $data = array(
+        'message' => "Selamat Datang, ada yang bisa kami bantu ?",
+        'send_to' => $id_user,
+        'send_by' => 0 ,
+        'judul_chat_id' => (int)$id_judul_chat
+      );
+      $this->chat_model->tambahChat($data);
+      redirect(base_url('chat'));
+
+    }
+
 
     public function getNewMessage()
   	{

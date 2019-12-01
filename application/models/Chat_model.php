@@ -18,12 +18,15 @@ class Chat_model extends CI_Model{
 
     public function getAllJudulChatByIdSender($idSender){
       $this->db->select('*');
+      $this->db->join('user','user.user_id=judul_chat.send_by','left');
+      $this->db->order_by("id_judul_chat", "desc");
       $query = $this->db->get_where('judul_chat',array('send_by'=>$idSender));
       return $query->result_array();
     }
 
     public function getAllJudulChatByIdReceiver($idReceiver){
       $this->db->select('*');
+      $this->db->join('user','user.user_id=judul_chat.send_by','left');
       $query = $this->db->get_where('judul_chat',array('send_to'=>$idReceiver));
       return $query->result_array();
     }
@@ -176,28 +179,17 @@ class Chat_model extends CI_Model{
         return 1;
     }
 
-    public function create_proyek($data){
-        $this->db->insert("task_project",$data);
+    public function createNewKonsultasi($judul, $jenis_konsultasi, $id_user){
+        $data = array(
+          'judul_chat' => $judul,
+          'jenis_konsultasi' =>$jenis_konsultasi,
+          'send_by' => $id_user
+        );
+        $this->db->insert("judul_chat",$data);
         $insert_id = $this->db->insert_id();
         return $insert_id;
     }
 
-    public function create_pekerjaan($data){
-        $this->db->insert("task_detail",$data);
-        $insert_id = $this->db->insert_id();
-        return $insert_id;
-    }
-
-    public function create_history($data_history){
-        $this->db->insert("task_history",$data_history);
-        $insert_id = $this->db->insert_id();
-        return $insert_id;
-    }
-    public function create_status($data){
-        $this->db->insert("task_status",$data);
-        $insert_id = $this->db->insert_id();
-        return $insert_id;
-    }
 
 }
 ?>
