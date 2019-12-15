@@ -24,9 +24,18 @@ class Chat_model extends CI_Model{
       return $query->result_array();
     }
 
+    public function getAllJudulChatByIdSenderLuar($idSender){
+      $this->db->select('*');
+      $this->db->join('users','users.user_id=judul_chat.send_by','left');
+      $this->db->order_by("id_judul_chat", "desc");
+      $query = $this->db->get_where('judul_chat',array('send_by'=>$idSender));
+      return $query->result_array();
+    }
+
     public function getAllJudulChatByIdReceiver($idReceiver){
       $this->db->select('*');
       $this->db->join('user','user.user_id=judul_chat.send_by','left');
+      $this->db->order_by("id_judul_chat", "desc");
       $query = $this->db->get_where('judul_chat',array('send_to'=>$idReceiver));
       return $query->result_array();
     }
@@ -39,6 +48,7 @@ class Chat_model extends CI_Model{
 
     public function getChatByIdJudul($idJudul){
       $this->db->select('*');
+      //$this->db->join('judul_chat', 'judul_chat.id_judul_chat = chat.judul_chat_id', 'left');
       $query = $this->db->get_where('chat',array('judul_chat_id'=>$idJudul));
       return $query->result_array();
     }
@@ -50,6 +60,19 @@ class Chat_model extends CI_Model{
       $this->db->where('send_to', $sendTo);
       $this->db->where('status',0);
       return $this->db->get()->result_array();
+    }
+
+    public function getGrabNewMessage(){
+      $this->db->select('*');
+      $this->db->from('judul_chat');
+      $this->db->order_by('id_judul_chat', 'DESC');
+      $this->db->where('send_to',0);
+      return $this->db->get()->result_array();
+    }
+
+    public function updateGrabNewMessage($idJudulChat, $sendTo){
+      $this->db->update("judul_chat",array("send_to"=>$sendTo), array("id_judul_chat" =>$idJudulChat));
+      return 1;
     }
 
     public function getAllStatus(){

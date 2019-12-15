@@ -19,19 +19,31 @@ class Chat extends CI_Controller
 
     public function index()
     {
+        $id_judul = $this->input->get('id_judul');
         $id_user = $this->session->userdata('user_id_econsulting');
         if($this->session->userdata('role_econsulting') == 'penanya'){
           $judul_chats = $this->chat_model->getAllJudulChatByIdSender($id_user);
+        }elseif($this->session->userdata('role_econsulting') == 'penanya_luar'){
+          $judul_chats = $this->chat_model->getAllJudulChatByIdSenderLuar($id_user);
         }else{
           $judul_chats = $this->chat_model->getAllJudulChatByIdReceiver($id_user);
         }
 
         if($judul_chats){
-          $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
-          $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
-          $judul = $judul_chats[0]["judul_chat"];
-          $send_by = $judul_chats[0]["nama"];
-          $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
+          if($id_judul){
+            $chats = $this->chat_model->getChatByIdJudul($id_judul);
+            $this->chat_model->updateChatStatusByIdJudul($id_judul);
+            $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul);
+            $judul = $judul_chat["judul_chat"];
+            $send_by = $this->user_model->getUserById($judul_chat["send_by"]);
+            $GLOBALS['id_judul_chat']  = $judul_chat["id_judul_chat"];
+          }else{
+            $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
+            $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
+            $judul = $judul_chats[0]["judul_chat"];
+            $send_by = $judul_chats[0]["nama"];
+            $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
+          };
         }else{
           $chats = array();
           $judul = "";
@@ -123,4 +135,20 @@ class Chat extends CI_Controller
   		$data = json_encode($newMessage);
   		echo ($data);
   	}
+
+    public function grabNewMessage()
+  	{
+      $newMessage = $this->chat_model->getGrabNewMessage();
+      $data = json_encode($newMessage);
+  		echo ($data);
+  	}
+    public function grabNewMessageUpdate()
+  	{
+      $id_judul_chat = htmlentities($this->input->post('id_judul_chat', true));
+      $id_user = $this->session->userdata["user_id_econsulting"];
+      $this->chat_model->updateGrabNewMessage($id_judul_chat, $id_user);
+      $data = json_encode($newMessage);
+      echo ($data);
+  	}
+
 }

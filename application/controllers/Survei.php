@@ -10,11 +10,11 @@ class Survei extends CI_Controller
         $this->load->library('session');
         $this->load->database();
         $this->load->helper(array('url', 'form'));
-        if (!isset($this->session->userdata['logged_in']) || $this->session->userdata['logged_in'] === false) {
+        if (!isset($this->session->userdata['logged_in_econsulting']) || $this->session->userdata['logged_in_econsulting'] === false) {
             redirect(base_url());
         }
 
-        $this->user = $this->db->get_where('users', array('id' => $this->session->userdata['user_id']), 1)->row();
+        $this->user = $this->db->get_where('users', array('id' => $this->session->userdata['user_id_econsulting']), 1)->row();
     }
 
     public function index()
@@ -79,8 +79,14 @@ class Survei extends CI_Controller
          }
 
          $surveis = $this->survei_model->getSurveiById(3);
+         $id_judul = $this->input->get('id_judul_chat');
+         $judul_chat =  "";
+         if($id_judul){
+            $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul);
+         }
          $data = array(
            'content' => 'survei/survei_konsultasi.php',
+           'judul_chat' => $judul_chat,
            'surveis' => $surveis,
            // 'count_consultan'=> $count_konsultan
          );

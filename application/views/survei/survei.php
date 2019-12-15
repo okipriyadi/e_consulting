@@ -31,7 +31,7 @@
 		<div class="col-md-4" style=" ">
 			<div style="margin:15px; background-color:#b5cdf2;">
 				<center>
-					<a href="<?= base_url()?>index.php/survei/survei_konsultasi" >
+					<a href="<?= base_url()?>survei/survei_konsultasi" >
 						<img src="<?php echo base_url() ?>assets/template/images/survei-kepuasan-konsultasi2.jpg" style="margin-top:10px;height:130px">
 						<br/>
 						<br/>
@@ -49,7 +49,7 @@
 				    <div class="row" style="clear:both"></div>
 						<div class="row">
 						<div class="col-md-3">
-							<center>Apakah Anda Puas Terhadap Layanan Kami </center>
+							<center>Kepuasan Terhadap Layanan Konsultasi </center>
 							<br/>
 							<br/>
 							<br/>

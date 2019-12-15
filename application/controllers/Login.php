@@ -67,9 +67,11 @@ class Login extends CI_Controller {
 				$db = $this->db->get_where('users', array('email' => $_POST["emailtamu"]), 1)->row();
 			};
 			$newdata = array(
-			 		'user_id' => $db->id,
+					'logged_in_econsulting' => TRUE,
+					'nama_econsulting' => $_POST["nama"],
 					'username'  => $_POST["emailtamu"],
-					'logged_in_econsulting' => TRUE
+					'logged_in_econsulting' => TRUE,
+					'role_econsulting' => 'penanya_luar'
 		 	);
 			$this->session->set_userdata($newdata);
 			///print_r($newdata);

@@ -42,7 +42,7 @@
             }
          ?>
         <li class="nav-item"><a href="#" class="nav-link">Auditor</a></li>
-        <li class="nav-item"><a href="<?= base_url() ?>index.php/survei" class="nav-link">Survei</a></li>
+        <li class="nav-item"><a href="<?= base_url() ?>survei" class="nav-link">Survei</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Layanan Konsultasi</a></li>
         <li class="nav-item"><a href="<?= base_url() ?>index.php/Download" class="nav-link">download</a></li>
         <li class="nav-item"><a href="<?= base_url() ?>index.php/faq" class="nav-link">FAQ</a></li>
@@ -61,9 +61,4 @@
     </div>
   </div>
 </nav>
-<script>
-$(document).ready(function(){
-  
-}
-</script>
 <!-- END nav -->

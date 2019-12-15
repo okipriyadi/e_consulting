@@ -1,3 +1,6 @@
+<?php
+global $id_judul_chat;
+?>
 <link rel="stylesheet" type="text/css" href="<?= base_url('assets/template/css/chat.css') ?>">
 
 <div class="row" id="container" style="background:black">
@@ -19,6 +22,9 @@
 
 
           <div class="row sideBar">
+            <?php
+            if($this->session->userdata('role_econsulting') == "penanya" or $this->session->userdata('role_econsulting') == "penanya_luar"   ){
+            ?>
             <a href="#" data-toggle="modal" data-target="#konsultasiBaru">
               <div class="row sideBar-body" style="width:100%">
                 <div class="col-sm-3 col-xs-3 sideBar-avatar">
@@ -43,15 +49,16 @@
 
 
             <?php
+            }
             foreach ($judul_chats as $key => $judul_chat) {
             ?>
-            <div class="row sideBar-body" style="width:100%">
+            <div class="row sideBar-body" style="width:100%; <?php if($judul_chat["id_judul_chat"]==$id_judul_chat){ echo "background:#dcf8c6";} ?> ">
               <div class="col-sm-3 col-xs-3 sideBar-avatar">
                 <div class="avatar-icon">
                   <i class="fas fa-envelope-square fa-4x"></i>
                 </div>
               </div>
-              <div class="col-sm-9 col-xs-9 sideBar-main">
+              <div class="col-sm-9 col-xs-9 sideBar-main" onclick="clickJudul(<?php echo $judul_chat["id_judul_chat"]?>)">
                 <div class="row">
                   <div class="col-sm-8 col-xs-8 sideBar-name">
                     <span class="name-meta"><?php echo $judul_chat["judul_chat"]?>
@@ -69,9 +76,7 @@
             ?>
           </div>
         </div>
-
-        </div>
-
+      </div>
       <div class="col-sm-8 conversation">
         <div class="row heading">
           <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
@@ -82,13 +87,12 @@
           <div class="col-sm-9 col-xs-8 heading-name">
             <a class="heading-name-meta" style="color:white">
               <?php
-                if($this->session->userdata('role_econsulting')=='penanya'){
+                if($this->session->userdata('role_econsulting')=='penanya' or $this->session->userdata('role_econsulting')=='penanya_luar'){
                   echo 'Admin Inspektorat';
                 }else{
                   print_r($send_by);
                 }
               ?>
-
             </a>
             <span class="heading-online">Online</span>
           </div>
@@ -96,7 +100,6 @@
             <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
           </div>
         </div>
-
         <div class="row message" id="conversation">
           <div class="row message-previous">
             <div class="col-sm-12 previous">
@@ -105,8 +108,6 @@
               </a>
             </div>
           </div>
-
-
           <?php
             foreach ($chats as $key => $chat) {
               if($chat["send_by"] ==  $this->session->userdata('user_id_econsulting')){
@@ -144,14 +145,10 @@
           }
         ?>
         </div>
-
       </div>
-
-
-
         <div class="row reply" style="position: fixed; bottom: 0; background:red; ">
           <div class="col-sm-1 col-xs-1 reply-emojis">
-            <i class="fa fa-smile-o fa-2x"></i>
+            <button class="btn btn-warning" style="font-size:12x; margin-top:-10px" onclick="tutupSurvei()">Tutup Survei</button>
           </div>
           <div class="col-sm-9 col-xs-9 reply-main">
             <textarea class="form-control" rows="1" id="comment" placeholder="Tulis Disini"></textarea>
@@ -228,6 +225,12 @@ function custom_footer(){
  ?>
   <script src="http://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script type="text/javascript">
+
+  function clickJudul(id_judul){
+    var url = "<?php echo base_url("chat")?>" + "?id_judul="+id_judul ;
+    window.location.replace(url);
+  }
+
   	$(function(){
       $(".heading-compose").click(function() {
         $(".side-two").css({
@@ -241,6 +244,17 @@ function custom_footer(){
         });
       });
   });
+
+  function tutupSurvei(){
+          var msg_alert = "Apakah anda yakin untuk menutup konsultasi ini : \n(Jika  Anda Menjawab Ya Mohon diisi Survei Kepuasan Konsultasi dihalaman selanjutnya.)";
+          var r = confirm(msg_alert);
+          if (r == true) {
+            var url = "<?php echo base_url("survei/survei_konsultasi")?>?id_judul_chat=<?= $id_judul_chat ?>";
+            window.location.replace(url);
+          }else {
+
+          }
+  }
 
   $(document).ready(function(){
     $('#comment').focus();

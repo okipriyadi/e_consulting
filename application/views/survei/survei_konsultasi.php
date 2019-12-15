@@ -21,9 +21,8 @@
 </style>
 <div class="row" style="padding:10px">
   <div class="col-md-12" >
-
     <center>
-    <h1>Survei Kepuasan Konsultasi</h1>
+    <h1>Survei Kepuasan Konsultasi <?php if($judul_chat){ echo $judul_chat["judul_chat"]; } ?></h1>
     <form action="<?= base_url() ?>index.php/survei/survei_konsultasi" method="post">
     <table class="table table-bordered dataTable" style="width:80%">
       <tr class="jududl_tabel">
