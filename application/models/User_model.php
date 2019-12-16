@@ -16,6 +16,12 @@ class User_model extends CI_Model{
       return $query->row_array();
     }
 
+    public function getUserLuarById($idUser){
+      $this->db->select('*');
+      $query = $this->db->get_where('users',array('id'=>$idUser));
+      return $query->row_array();
+    }
+
     public function getUserEmail($username){
         $login = false;
         $query = $this->db->get_where('user',array('email'=>$this->input->post('username')));

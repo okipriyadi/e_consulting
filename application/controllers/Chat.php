@@ -25,28 +25,39 @@ class Chat extends CI_Controller
           $judul_chats = $this->chat_model->getAllJudulChatByIdSender($id_user);
         }elseif($this->session->userdata('role_econsulting') == 'penanya_luar'){
           $judul_chats = $this->chat_model->getAllJudulChatByIdSenderLuar($id_user);
+        }elseif($this->session->userdata('role_econsulting') == 'inspektur'){
+          $judul_chats = $this->chat_model->getAllJudulChat($id_user);
         }else{
           $judul_chats = $this->chat_model->getAllJudulChatByIdReceiver($id_user);
         }
 
         if($judul_chats){
           if($id_judul){
-            $chats = $this->chat_model->getChatByIdJudul($id_judul);
-            $this->chat_model->updateChatStatusByIdJudul($id_judul);
-            $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul);
-            $judul = $judul_chat["judul_chat"];
-            $send_by = $this->user_model->getUserById($judul_chat["send_by"]);
-            $GLOBALS['id_judul_chat']  = $judul_chat["id_judul_chat"];
+                $chats = $this->chat_model->getChatByIdJudul($id_judul);
+                $this->chat_model->updateChatStatusByIdJudul($id_judul);
+                $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul);
+                $judul = $judul_chat;
+                if($judul["send_by"] > 9000){//dari instansi luar
+                  $send_by = $this->user_model->getUserLuarById($judul["send_by"])["name"];
+                }else{
+                  $send_by = $this->user_model->getUserById($judul["send_by"])["nama"];
+                }
+                $GLOBALS['id_judul_chat']  = $judul_chat["id_judul_chat"];
           }else{
-            $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
-            $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
-            $judul = $judul_chats[0]["judul_chat"];
-            $send_by = $judul_chats[0]["nama"];
-            $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
+                $chats = $this->chat_model->getChatByIdJudul($judul_chats[0]["id_judul_chat"]);
+                $this->chat_model->updateChatStatusByIdJudul($judul_chats[0]["id_judul_chat"]);
+                $judul = $judul_chats[0];
+                if($judul["send_by"] > 9000){//dari instansi luar
+                  $send_by = $this->user_model->getUserLuarById($judul["send_by"])["name"];
+                }else{
+                  $send_by = $this->user_model->getUserById($judul["send_by"])["nama"];
+                }
+                $GLOBALS['id_judul_chat']  = $judul_chats[0]["id_judul_chat"];
+
           };
         }else{
           $chats = array();
-          $judul = "";
+          $judul["judul_chat"] = "";
           $GLOBALS['id_judul_chat']  = "";
           $send_by = "";
         }
@@ -93,7 +104,7 @@ class Chat extends CI_Controller
     {
       $id_judul_chat = htmlentities($this->input->post('id_judul_chat', true));
       $judul_chat = $this->chat_model->getJudulChatByIdJudul($id_judul_chat);
-      if($this->session->userdata('role_econsulting') == 'penanya'){
+      if($this->session->userdata('role_econsulting') == 'penanya' or $this->session->userdata('role_econsulting') == 'penanya_luar'){
         $sendTo = (int)$judul_chat['send_to'];
         $sendBy = (int)$judul_chat['send_by'];
       }else{

@@ -15,6 +15,9 @@ class Login extends CI_Controller {
 			//$ldap = $this->user_model->ldap_login();
 			//if($ldap){
 				$query = $this->user_model->getUserEmail($this->input->post('username'));
+				if(!$query){
+					redirect(base_url());
+				}
 				$data = $query->row_array();
 				$role_inspektorat = array(
 					'196501201985031001' => 'inspektur', //budi prawira
@@ -60,13 +63,16 @@ class Login extends CI_Controller {
 					'username'=>$_POST["emailtamu"],
 					'email'=>$_POST["emailtamu"],
 					'instansi'=>$_POST["instansi"],
-					'jenis_konsultasi'=>$_POST["konsultasi"],
+					//'jenis_konsultasi'=>$_POST["konsultasi"],
 					'hp'=>$_POST["hp"],
 					'role'=>2,
 				));
 				$db = $this->db->get_where('users', array('email' => $_POST["emailtamu"]), 1)->row();
 			};
+
+
 			$newdata = array(
+					'user_id_econsulting' => $db->id,
 					'logged_in_econsulting' => TRUE,
 					'nama_econsulting' => $_POST["nama"],
 					'username'  => $_POST["emailtamu"],
@@ -74,7 +80,6 @@ class Login extends CI_Controller {
 					'role_econsulting' => 'penanya_luar'
 		 	);
 			$this->session->set_userdata($newdata);
-			///print_r($newdata);
 			redirect('chat', 'refresh');
 		}
 		redirect(base_url());
@@ -88,13 +93,16 @@ class Login extends CI_Controller {
 
 	public function login_tamu(){
 
-		$db = $this->db->get_where("users", array('email'=>$_POST["email"]))->row_array();
+		$db = $this->db->get_where("users", array('email'=>$_POST["email"]))->row();
 		if($db){
-				$newdata = array(
-					'user_id' => $db["id"],
+			$newdata = array(
+					'user_id_econsulting' => $db->id,
+					'logged_in_econsulting' => TRUE,
+					'nama_econsulting' => $db->name,
 					'username'  => $_POST["email"],
-					'logged_in' => TRUE
-		 	);
+					'logged_in_econsulting' => TRUE,
+					'role_econsulting' => 'penanya_luar'
+			);
 			$this->session->set_userdata($newdata);
 			echo 1;
 		}

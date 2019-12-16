@@ -16,6 +16,14 @@ class Chat_model extends CI_Model{
       return $insert_id;
     }
 
+    public function getAllJudulChat($idSender){
+      $this->db->select('*');
+      $this->db->join('user','user.user_id=judul_chat.send_by','left');
+      $this->db->order_by("id_judul_chat", "desc");
+      $query = $this->db->get('judul_chat');
+      return $query->result_array();
+    }
+
     public function getAllJudulChatByIdSender($idSender){
       $this->db->select('*');
       $this->db->join('user','user.user_id=judul_chat.send_by','left');
@@ -26,7 +34,7 @@ class Chat_model extends CI_Model{
 
     public function getAllJudulChatByIdSenderLuar($idSender){
       $this->db->select('*');
-      $this->db->join('users','users.user_id=judul_chat.send_by','left');
+      $this->db->join('users','users.id=judul_chat.send_by','left');
       $this->db->order_by("id_judul_chat", "desc");
       $query = $this->db->get_where('judul_chat',array('send_by'=>$idSender));
       return $query->result_array();

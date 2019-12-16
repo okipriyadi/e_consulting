@@ -94,10 +94,6 @@
                               <input type="text" name="instansi" class="form-control" id="instansi">
                             </div>
                             <div class="form-group">
-                              <label for="konsultasi">Jenis Konsultasi:</label>
-                              <input type="text" name="konsultasi" class="form-control" id="konsultasi">
-                            </div>
-                            <div class="form-group">
                               <label for="hp">No HP/WA:</label>
                               <input type="text" name="hp" class="form-control" id="hp">
                             </div>
@@ -500,12 +496,12 @@ function custom_footer(){
     $('#btntamu').click(function(){
       $('#emailtamu').val($('#emailtamuawal').val());
       $.ajax({
-          url: "<?php echo base_url('index.php/login/login_tamu')?>" ,
+          url: "<?php echo base_url('login/login_tamu')?>" ,
           type: "post",
           data :{"email":$('#emailtamuawal').val()},
           success: function(response){
             if(response == 1){
-              //window.location.replace("<?= base_url('index.php/chat/');?>");
+              window.location.replace("<?= base_url('chat/');?>");
             }
           }
       });
