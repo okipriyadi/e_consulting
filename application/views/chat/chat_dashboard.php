@@ -62,7 +62,12 @@ global $id_judul_chat;
                           <div class="row">
                             <!--<div class="col-sm-8 col-xs-8 sideBar-name">-->
                             <div class="col-sm-12 col-xs-12 sideBar-name">
-                              <span class="name-meta"><?php echo $judul_chat["judul_chat"]?><br>
+                              <span class="name-meta">
+                                <?php for($i=0;$i<$judul_chat["penilaian"]; $i++){ ?>
+                                    <i class="fa fa-star" style="color:#ffc107"></i>
+                                <?php }; ?>
+                                <?php echo $judul_chat["judul_chat"]?>
+                                <br>
 
                               </span>
                               <span>
@@ -76,6 +81,8 @@ global $id_judul_chat;
                                       echo " -> ".$this->user_model->getUserById($judul_chat["send_to"])["nama"];
                                     }
                                 ?>
+
+
                               </span>
                             </div>
                             <!--<div class="col-sm-4 col-xs-4 pull-right sideBar-time">
@@ -120,7 +127,15 @@ global $id_judul_chat;
                 <div class="row message-previous">
                     <div class="col-sm-12 previous">
                       <a onclick="previous(this)" id="ankitjain28" name="20">
-                        <?php print_r($judul["judul_chat"]) ?>
+                        <?php
+                            print_r($judul["judul_chat"]);
+                            if($judul["penilaian"] > 0){
+                        ?>
+                            <p style="color:red"> (Konsultasi Dengan Judul Ini Sudah Ditutup)</p>
+
+                        <?php
+                            }
+                         ?>
                       </a>
                     </div>
                 </div>
@@ -198,10 +213,12 @@ global $id_judul_chat;
           </div>
             <?php
               if($this->session->userdata('role_econsulting') != "inspektur"){
+                if($judul["penilaian"] < 1 ){
             ?>
                   <div class="row reply" style="position: fixed; bottom: 0; background:red; ">
                         <div class="col-sm-1 col-xs-1 reply-emojis">
-                          <button class="btn btn-warning" style="font-size:12x; margin-top:-10px" onclick="tutupSurvei()">Tutup Survei</button>
+                          <button type="button" class="btn btn-warning btn-lg" data-toggle="modal" data-target="#rateModal" style="font-size:15px; margin-top:-10px" <?php if($this->session->userdata('role_econsulting') == "konsultan" ){ echo "disabled"; } ?>>Tutup Survei</button>
+                          <!--<button class="btn btn-warning" style="font-size:12x; margin-top:-10px" onclick="tutupSurvei()">Tutup Survei</button>-->
                         </div>
                         <div class="col-sm-9 col-xs-9 reply-main">
                           <textarea class="form-control" rows="1" id="comment" placeholder="Tulis Disini"></textarea>
@@ -214,6 +231,7 @@ global $id_judul_chat;
                         </div>
                   </div>
             <?php
+                }
               }
             ?>
       </div>
@@ -222,6 +240,45 @@ global $id_judul_chat;
 </div>
 <input type="text" id="hereToFocus" style="color:white; border:0px">
 
+<!-- Modal Rating -->
+<form action="<?= base_url()?>chat/rate" method="post">
+<div id="rateModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header" style="background-color:#009688; color:white">
+        <h4 class="modal-title" style="color:white">Survei Kepuasan</h4>
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+
+      </div>
+      <div class="modal-body">
+        <p>Seberapa puas anda dengan layanan konsultasi ini ?</p>
+        <center>
+          <i class="fa fa-star fa-4x puas" id="puas1"></i>
+          <i class="fa fa-star fa-4x puas" id="puas2"></i>
+          <i class="fa fa-star fa-4x puas" id="puas3"></i>
+          <i class="fa fa-star fa-4x puas" id="puas4"></i>
+          <i class="fa fa-star fa-4x puas" id="puas5"></i>
+          <br><br>
+          <p style="font-size:0.8em">(Dengan menekan tombol simpan, konsultasi akan ditutup dan anda tidak dapat lagi menambah komentar pada konsultasi pada judul ini)</p>
+          <input type="text" value="0" name="penilaian" id="pertanyaan0" style="display:none">
+          <input type="text" value=<?= $id_judul_chat ?> name="id_judul_chat" id="pertanyaan0" style="display:none">
+        </center>
+      </div>
+      <div class="modal-footer">
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary">Simpan</button>
+        </div>
+        <div class="col-md-6" style="text-align:right">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</form>
 
 <!-- Modal -->
 <form  action="<?= base_url()?>chat/newKonsultasi" method="post" >
@@ -258,14 +315,21 @@ global $id_judul_chat;
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Login</button>
+        <div class="col-md-6">
+          <button type="submit" class="btn btn-primary">Lanjut</button>
+        </div>
+        <div class="col-md-6" style="text-align:right">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 </form>
 </div>
+
+
+
 
 <div class="text-center p-t-136">
 <a class="txt2" href="#">
@@ -393,6 +457,113 @@ function custom_footer(){
           })
       }
       interval = setInterval(checkNewMessage, 1000);
+  });
+
+
+
+  $( document ).ready(function(){
+    var sudahClick = 0;
+
+
+    function bintang1(){
+      $("#puas1").css({"color":"#ffc107"});
+      $("#puas2").css({"color":"grey"});
+      $("#puas3").css({"color":"grey"});
+      $("#puas4").css({"color":"grey"});
+      $("#puas5").css({"color":"grey"});
+    }
+
+    function bintang2(){
+      $("#puas1").css({"color":"#ffc107"});
+      $("#puas2").css({"color":"#ffc107"});
+      $("#puas3").css({"color":"grey"});
+      $("#puas4").css({"color":"grey"});
+      $("#puas5").css({"color":"grey"});
+    }
+
+    function bintang3(){
+      $("#puas1").css({"color":"#ffc107"});
+      $("#puas2").css({"color":"#ffc107"});
+      $("#puas3").css({"color":"#ffc107"});
+      $("#puas4").css({"color":"grey"});
+      $("#puas5").css({"color":"grey"});
+    }
+
+    function bintang4(){
+      $("#puas1").css({"color":"#ffc107"});
+      $("#puas2").css({"color":"#ffc107"});
+      $("#puas3").css({"color":"#ffc107"});
+      $("#puas4").css({"color":"#ffc107"});
+      $("#puas5").css({"color":"grey"});
+    }
+
+    function bintang5(){
+      $("#puas1").css({"color":"#ffc107"});
+      $("#puas2").css({"color":"#ffc107"});
+      $("#puas3").css({"color":"#ffc107"});
+      $("#puas4").css({"color":"#ffc107"});
+      $("#puas5").css({"color":"#ffc107"});
+    }
+
+    $("#puas1").hover(function(){
+      if(sudahClick == 0){
+        bintang1();
+      }
+    })
+    $("#puas2").hover(function(){
+      if(sudahClick == 0){
+        bintang2();
+      }
+    })
+    $("#puas3").hover(function(){
+      if(sudahClick == 0){
+        bintang3();
+      }
+    });
+    $("#puas4").hover(function(){
+      if(sudahClick == 0){
+        bintang4();
+      }
+    });
+    $("#puas5").hover(function(){
+      if(sudahClick == 0){
+        bintang5()
+      }
+    });
+
+    $("#puas1").click(function(){
+        sudahClick = sudahClick +1;
+        bintang1();
+        $('#pertanyaan0').val("1")
+    })
+    $("#puas2").click(function(){
+        sudahClick = sudahClick +1;
+        bintang2();
+        $('#pertanyaan0').val("2")
+    })
+    $("#puas3").click(function(){
+        sudahClick = sudahClick +1;
+        bintang3();
+        $('#pertanyaan0').val("3")
+    });
+    $("#puas4").click(function(){
+        sudahClick = sudahClick +1;
+        bintang4();
+        $('#pertanyaan0').val("4")
+    });
+    $("#puas5").click(function(){
+        sudahClick = sudahClick +1;
+        bintang5()
+        $('#pertanyaan0').val("5");
+    });
+
+    $(".puas").mouseleave(function(){
+      if(sudahClick == 0){
+        $(".puas").css({"color":"grey"});
+      }
+    });
+
+
   });
   </script>
 <?php

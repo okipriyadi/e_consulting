@@ -1,5 +1,5 @@
 <?php
-
+require_once(APPPATH.'libraries/sendemail.php');
 class Chat extends CI_Controller
 {
     public $user;
@@ -58,6 +58,7 @@ class Chat extends CI_Controller
         }else{
           $chats = array();
           $judul["judul_chat"] = "";
+          $judul["penilaian"]="";
           $GLOBALS['id_judul_chat']  = "";
           $send_by = "";
         }
@@ -120,6 +121,15 @@ class Chat extends CI_Controller
       $this->chat_model->tambahChat($data);
     }
 
+    public function email_to_internal($pesan, $emailSubject){
+        $recipients = array(
+          //"Budi" => "budiafran@gmail.com",
+          "Luqkman" => "lukmanfikri46@gmail.com",
+          "inspektorat" => "inspektorat@menpan.go.id"
+        );
+        sendemail($recipients, $pesan, $emailSubject);
+    }
+
     public function newKonsultasi()
     {
       $judul_chat = htmlentities($this->input->post('judul'));
@@ -133,8 +143,18 @@ class Chat extends CI_Controller
         'judul_chat_id' => (int)$id_judul_chat
       );
       $this->chat_model->tambahChat($data);
+      $emailSubject = "Terdapat Konsultasi Baru dengan judul :".$judul_chat;
+      $this->email_to_internal($judul_chat, $emailSubject);
       redirect(base_url('chat'));
 
+    }
+
+    public function rate()
+    {
+      $id_judul_chat = htmlentities($this->input->post('id_judul_chat'));
+      $penilaian = htmlentities($this->input->post('penilaian'));
+      $this->chat_model->updateRating($id_judul_chat, $penilaian);
+      redirect(base_url('chat?id_judul='.$id_judul_chat));
     }
 
 

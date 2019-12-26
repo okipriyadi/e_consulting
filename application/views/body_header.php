@@ -41,14 +41,14 @@
         <?php
             }
          ?>
-        <li class="nav-item"><a href="#" class="nav-link">Auditor</a></li>
-        <li class="nav-item"><a href="<?= base_url() ?>survei" class="nav-link">Survei</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Layanan Konsultasi</a></li>
+        <li class="nav-item"><a href="<?= base_url()?>#auditor" class="nav-link">Auditor</a></li>
+        <li class="nav-item"><a href="<?= base_url()?>#layananKonsultasi" class="nav-link">Layanan Konsultasi</a></li>
         <li class="nav-item"><a href="<?= base_url() ?>index.php/Download" class="nav-link">download</a></li>
         <li class="nav-item"><a href="<?= base_url() ?>index.php/faq" class="nav-link">FAQ</a></li>
         <?php
             if (isset($this->session->userdata['logged_in_econsulting']))  {
         ?>
+              <li class="nav-item"><a href="<?= base_url() ?>survei" class="nav-link">Survei</a></li>
               <li class="nav-item"><a href="<?= base_url() ?>index.php/login/logout" class="nav-link">Logout</a></li>
         <?php
             }else{

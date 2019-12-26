@@ -83,6 +83,11 @@ class Chat_model extends CI_Model{
       return 1;
     }
 
+    public function updateRating($idJudulChat, $penilaian){
+      $this->db->update("judul_chat",array("penilaian"=>$penilaian), array("id_judul_chat" =>$idJudulChat));
+      return 1;
+    }
+
     public function getAllStatus(){
         $this->db->select('*');
         $query = $this->db->get_where('task_status',array());

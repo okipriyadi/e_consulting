@@ -50,7 +50,11 @@ class Survei extends CI_Controller
            $jumlah = $jumlah + $bintang["jawaban"];
            $i++;
          }
-         $count_bintang = $jumlah/$i;
+         $pembagi = 1;
+         if($i>0){
+           $pembagi = $i;
+         }
+         $count_bintang = $jumlah/$pembagi;
          $GLOBALS['count_bintang'] = $count_bintang;
          $GLOBALS['count_konsultan'] = $count_konsultan;
 				 $data = array(

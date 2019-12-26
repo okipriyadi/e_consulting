@@ -12,17 +12,18 @@ class Login extends CI_Controller {
 
 	public function index(){
 		if (isset($_POST['username'])){
-			//$ldap = $this->user_model->ldap_login();
-			//if($ldap){
+			$ldap = $this->user_model->ldap_login();
+			if($ldap){
 				$query = $this->user_model->getUserEmail($this->input->post('username'));
 				if(!$query){
+					$this->session->set_flashdata('gagalLogin', 'Hubungi admin karena data anda belum diupdate di server kami');
 					redirect(base_url());
 				}
 				$data = $query->row_array();
 				$role_inspektorat = array(
 					'196501201985031001' => 'inspektur', //budi prawira
 					'197006051992021001' => 'admin', //ahmad zahidin
-					'199509012019021004' => 'admin', //
+					'199509012019021004' => 'konsultan', //luqman
 					'199304212019021003' => 'konsultan', //fikri azardi
 					'199201242019022006' => 'konsultan', //sinta
 					'199610112019022002' => 'konsultan', //Devinta
@@ -54,7 +55,9 @@ class Login extends CI_Controller {
 				    'username'  => $data['nama'],
 				);
 				redirect('chat', 'refresh');
-			//}
+			}else{
+				$this->session->set_flashdata('gagalLogin', 'Maaf Username/Password Anda Salah');
+			}
 		}elseif (isset($_POST['emailtamu'])){
 			$db = $this->db->get_where('users', array('email' => $_POST['emailtamu']), 1)->row();
 			if(!$db){
